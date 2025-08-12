@@ -226,7 +226,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/api/articles/{articleId}',
+              '/api/articles/${articleId}',
               queryParameters: queryParameters,
               data: _data,
             )

@@ -578,7 +578,10 @@ class _ArticleCard extends StatelessWidget {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(40)),
                         onPressed: () {
-                          // TODO: Navigate to article detail
+                          Navigator.of(context).pushNamed(
+                            MyRouteName.articleDetail,
+                            arguments: {'articleId': article.id},
+                          );
                         },
                       ),
                     )

@@ -2,6 +2,7 @@ import 'package:chickfit/core/enum/enum_data_status.dart';
 import 'package:chickfit/core/ext/number_extension.dart';
 import 'package:chickfit/core/resources/asset_colors.dart';
 import 'package:chickfit/core/resources/theme/theme_padding.dart';
+import 'package:chickfit/core/route/page_route.dart';
 import 'package:chickfit/core/utils/size_util.dart';
 import 'package:chickfit/core/widgets/back_icon_widget.dart';
 import 'package:chickfit/core/widgets/button/button_primary.dart';
@@ -89,80 +90,92 @@ class _ArticleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.network(
-              article.thumbnailUrl ?? "",
-              height: SizeUtil.getScreenWidth * 1 / 3,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: SizeUtil.getScreenWidth * 1 / 3,
-                  width: double.infinity,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.image, color: Colors.grey),
-                );
-              },
+    return InkPressableBase(
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          MyRouteName.articleDetail,
+          arguments: {'articleId': article.id},
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16)),
+              child: Image.network(
+                article.thumbnailUrl ?? "",
+                height: SizeUtil.getScreenWidth * 1 / 3,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: SizeUtil.getScreenWidth * 1 / 3,
+                    width: double.infinity,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.image, color: Colors.grey),
+                  );
+                },
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  article.title ?? "Judul Artikel",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  article.content ?? "Deskripsi artikel tidak tersedia",
-                  style: TextStyle(color: Colors.grey[600]),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "${article.authorName ?? 'Unknown'} • ${_formatDate(article.createdAt)}",
-                        style:
-                            const TextStyle(color: Colors.grey, fontSize: 12),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    article.title ?? "Judul Artikel",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    article.content ?? "Deskripsi artikel tidak tersedia",
+                    style: TextStyle(color: Colors.grey[600]),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "${article.authorName ?? 'Unknown'} • ${_formatDate(article.createdAt)}",
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 36,
-                      child: ButtonPrimary(
-                        text: "Baca",
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(40)),
-                        onPressed: () {
-                          // TODO: Navigate to article detail
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ],
+                      SizedBox(
+                        height: 36,
+                        child: ButtonPrimary(
+                          text: "Baca",
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(40)),
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(
+                              MyRouteName.articleDetail,
+                              arguments: {'articleId': article.id},
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

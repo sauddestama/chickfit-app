@@ -4,6 +4,7 @@ import 'package:chickfit/app_cubit.dart';
 import 'package:chickfit/data/repositories/consultation_repository.dart';
 import 'package:chickfit/data/repositories/diagnose_repository.dart';
 import 'package:chickfit/data/source/local/local_storage.dart';
+import 'package:chickfit/modules/home/article/bloc/article_detail_cubit.dart';
 import 'package:chickfit/navigation_service.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -51,5 +52,7 @@ Future<void> setupLocator() async {
   locator.registerSingleton(ConsultationRepository(
       apiClient: locator<ApiService>(),
       localDataSource: locator<LocalDataSource>()));
+  locator.registerSingleton(ArticleDetailCubit(
+      dataRepository: locator<DataRepository>()));
   locator.registerSingleton(AppCubit());
 }

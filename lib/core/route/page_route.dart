@@ -3,6 +3,7 @@ import 'package:chickfit/modules/diagnose_result/diagnose_result_page.dart';
 import 'package:chickfit/modules/home/doctors/doctor_detail_page.dart';
 import 'package:chickfit/modules/home/home_page_wrapper.dart';
 import 'package:chickfit/modules/home/chat/resep_detail_page.dart';
+import 'package:chickfit/modules/home/article/article_detail_page.dart';
 import 'package:chickfit/modules/login/login_page.dart';
 import 'package:chickfit/modules/register/register_screen.dart';
 import 'package:chickfit/modules/splash/splash_page.dart';
@@ -19,6 +20,7 @@ class MyRouteName {
   static const String consultationChat = "/consultation-chat";
   static const String doctorDetail = "/doctor-detail";
   static const String resepDetail = "/resep-detail";
+  static const String articleDetail = "/article-detail";
 }
 
 class MyPageRoute extends PageRouteBuilder {
@@ -69,6 +71,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return ConsultationChatPage.route(settings);
     case MyRouteName.resepDetail:
       return ResepDetailPage.route(settings);
+    case MyRouteName.articleDetail:
+      return ArticleDetailPage.route(settings);
 
     default:
       return MyPageRoute(SplashPage(), settings);

@@ -7,6 +7,7 @@ import 'package:chickfit/core/utils/size_util.dart';
 import 'package:chickfit/core/widgets/gap.dart';
 import 'package:chickfit/data/source/local/local_storage.dart';
 import 'package:chickfit/locator.dart';
+import 'package:chickfit/modules/home/article/bloc/article_detail_cubit.dart';
 import 'package:chickfit/modules/setting/base_url_setting.dart';
 import 'package:chickfit/navigation_service.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +39,15 @@ class MyApp extends StatelessWidget {
     if (SizeUtil.getScreenWidth == 0.0) {
       SizeUtil.init(context);
     }
-    return BlocProvider(
-      create: (BuildContext context) => locator<AppCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AppCubit>(
+          create: (BuildContext context) => locator<AppCubit>(),
+        ),
+        BlocProvider<ArticleDetailCubit>(
+          create: (BuildContext context) => locator<ArticleDetailCubit>(),
+        ),
+      ],
       child: MaterialApp(
         navigatorKey: locator.get<NavigationService>().navigatorKey,
         debugShowCheckedModeBanner: false,
@@ -62,7 +70,7 @@ class MyApp extends StatelessWidget {
             children: [
               child,
               Visibility(
-                visible: false,
+                visible: true,
                 child: SafeArea(
                   child: Align(
                     alignment: Alignment.topCenter,

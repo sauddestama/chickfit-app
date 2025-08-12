@@ -68,7 +68,7 @@ abstract class ApiService {
 
   @GET('/api/articles/{articleId}')
   Future<BaseObjectResponse<GetDetailArticleResponse>> getDetailArticle(
-      int articleId);
+      @Path("articleId") int articleId);
 
   @GET('/api/diagnoses/history/{userId}')
   Future<BaseObjectResponse<GetDiagnoseHistoriesResponse>>
