@@ -64,7 +64,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
     return Scaffold(
       backgroundColor: AssetColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: AssetColors.white,
+        backgroundColor: AssetColors.primaryMain,
         automaticallyImplyLeading: false,
         elevation: 2,
         centerTitle: false,
@@ -80,7 +80,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AssetColors.textPrimary,
+                    color: AssetColors.white,
                   ),
                 ),
               ),
@@ -89,39 +89,37 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
         ),
       ),
       body: SafeArea(
-        child: Expanded(
-          child: BlocBuilder<ArticleDetailCubit, ArticleDetailState>(
-            builder: (context, state) {
-              if (state.articleDetailDataStatus.loading ||
-                  state.articleDetailDataStatus.initial) {
-                return const Center(
-                  child: const SpinKitRing(
-                    color: AssetColors.colorPrimaryShades,
-                  ),
-                );
-              }
+        child: BlocBuilder<ArticleDetailCubit, ArticleDetailState>(
+          builder: (context, state) {
+            if (state.articleDetailDataStatus.loading ||
+                state.articleDetailDataStatus.initial) {
+              return const Center(
+                child: const SpinKitRing(
+                  color: AssetColors.colorPrimaryShades,
+                ),
+              );
+            }
 
-              if (!state.articleDetailDataStatus.success) {
-                return ErrorListWidget(
-                  pullToRefresh: false,
-                  onRetry: () {
-                    context
-                        .read<ArticleDetailCubit>()
-                        .fetchArticleDetail(widget.articleId);
-                  },
-                );
-              }
+            if (!state.articleDetailDataStatus.success) {
+              return ErrorListWidget(
+                pullToRefresh: false,
+                onRetry: () {
+                  context
+                      .read<ArticleDetailCubit>()
+                      .fetchArticleDetail(widget.articleId);
+                },
+              );
+            }
 
-              final article = state.article;
-              if (article == null) {
-                return const Center(
-                  child: Text('Artikel tidak ditemukan'),
-                );
-              }
+            final article = state.article;
+            if (article == null) {
+              return const Center(
+                child: Text('Artikel tidak ditemukan'),
+              );
+            }
 
-              return _buildArticleContent(article);
-            },
-          ),
+            return _buildArticleContent(article);
+          },
         ),
       ),
     );
@@ -220,7 +218,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
             article.content ?? 'Konten artikel tidak tersedia',
             style: TextStyle(
               fontSize: 14.ds,
-              color: AssetColors.textPrimary,
+              color: AssetColors.textBody,
               height: 1.6,
             ),
           ),
