@@ -17,6 +17,7 @@ Future<void> setupLocator() async {
   locator.registerSingleton(NavigationService());
   locator.registerSingleton(Alice(
     navigatorKey: locator<NavigationService>().navigatorKey,
+    showNotification: false,
   ));
   final localDataSource = LocalDataSource();
   locator.registerSingleton<LocalDataSource>(localDataSource);

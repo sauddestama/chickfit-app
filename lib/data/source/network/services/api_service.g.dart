@@ -212,6 +212,45 @@ class _ApiService implements ApiService {
   }
 
   @override
+  Future<BaseObjectResponse<GetDetailArticleResponse>> getDetailArticle(
+      int articleId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<BaseObjectResponse<GetDetailArticleResponse>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/articles/{articleId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseObjectResponse<GetDetailArticleResponse> _value;
+    try {
+      _value = BaseObjectResponse<GetDetailArticleResponse>.fromJson(
+        _result.data!,
+        (json) =>
+            GetDetailArticleResponse.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<BaseObjectResponse<GetDiagnoseHistoriesResponse>> getDiagnoseHistories(
       {required String userId}) async {
     final _extra = <String, dynamic>{};

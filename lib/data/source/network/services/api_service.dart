@@ -9,6 +9,7 @@ import 'package:chickfit/data/source/network/responses/diagnose_result_response.
 import 'package:chickfit/data/source/network/responses/get_article_response.dart';
 import 'package:chickfit/data/source/network/responses/get_consul_messages_response.dart';
 import 'package:chickfit/data/source/network/responses/get_consultations_response.dart';
+import 'package:chickfit/data/source/network/responses/get_detail_article_response.dart';
 import 'package:chickfit/data/source/network/responses/get_diagnose_histories_response.dart';
 import 'package:chickfit/data/source/network/responses/get_resep_response.dart';
 import 'package:chickfit/data/source/network/responses/post_consul_message_request.dart';
@@ -64,6 +65,10 @@ abstract class ApiService {
 
   @GET('/api/articles')
   Future<BaseObjectResponse<GetArticleResponse>> getPublishedArticle();
+
+  @GET('/api/articles/{articleId}')
+  Future<BaseObjectResponse<GetDetailArticleResponse>> getDetailArticle(
+      int articleId);
 
   @GET('/api/diagnoses/history/{userId}')
   Future<BaseObjectResponse<GetDiagnoseHistoriesResponse>>
