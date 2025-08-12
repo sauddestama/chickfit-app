@@ -42,7 +42,7 @@ class ChatScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BlocBuilder<ChatCubit, ChatState>(
+              BlocConsumer<ChatCubit, ChatState>(
                 builder: (context, state) {
                   return _Header(
                     onTapAdd: () {
@@ -53,6 +53,19 @@ class ChatScreen extends StatelessWidget {
                       }
                     },
                   );
+                },
+                listenWhen: (previous, current) =>
+                    previous.showBottomSheetDoctor !=
+                        current.showBottomSheetDoctor &&
+                    previous.showBottomSheetDoctor == false &&
+                    current.showBottomSheetDoctor == true,
+                listener: (context, state) {
+                  if (state.showBottomSheetDoctor) {
+                    context
+                        .read<ChatCubit>()
+                        .toggleShowBottomSheetDoctor(false);
+                    _showDoctorSelectionBottomSheet(context);
+                  }
                 },
               ),
               Gap.height(16),

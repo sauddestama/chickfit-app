@@ -6,6 +6,7 @@ class ChatCubit extends Cubit<ChatState> {
       : super(const ChatState(
           activeIndex: 0,
           homeStatus: ChatStatus.initial,
+          showBottomSheetDoctor: false,
         ));
 
   void setActiveChatPageIndex(int index) {
@@ -14,6 +15,12 @@ class ChatCubit extends Cubit<ChatState> {
 
   void initData({int? initialPageIndex}) async {
     emit(state.copyWith(activeIndex: initialPageIndex));
+  }
+
+  void toggleShowBottomSheetDoctor(bool value) {
+    emit(state.copyWith(
+      showBottomSheetDoctor: value,
+    ));
   }
 }
 
@@ -27,24 +34,29 @@ class ChatState extends Equatable {
   final String? message;
 
   final String? errorMessage;
+  final bool showBottomSheetDoctor;
 
   const ChatState(
       {required this.activeIndex,
       required this.homeStatus,
       this.message,
-      this.errorMessage});
+      this.errorMessage,
+      required this.showBottomSheetDoctor});
 
   ChatState copyWith({
     int? activeIndex,
     ChatStatus? homeStatus,
     String? message,
     String? errorMessage,
+    bool? showBottomSheetDoctor,
   }) {
     return ChatState(
       activeIndex: activeIndex ?? this.activeIndex,
       homeStatus: homeStatus ?? this.homeStatus,
       message: message ?? this.message,
       errorMessage: errorMessage ?? this.errorMessage,
+      showBottomSheetDoctor:
+          showBottomSheetDoctor ?? this.showBottomSheetDoctor,
     );
   }
 
@@ -54,5 +66,6 @@ class ChatState extends Equatable {
         homeStatus,
         message,
         errorMessage,
+        showBottomSheetDoctor,
       ];
 }

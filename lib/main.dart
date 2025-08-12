@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
             children: [
               child,
               Visibility(
-                visible: false,
+                visible: true,
                 child: SafeArea(
                   child: Align(
                     alignment: Alignment.topCenter,

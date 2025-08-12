@@ -144,39 +144,6 @@ class DiagnosisResultPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 2),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-                size: 24,
-              ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          const Text(
-            'Hasil Diagnosis',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildDiagnosisCard(
       DiagnoseResultPrediction? prediction, DiagnoseResultImage? image) {
     final label = prediction?.label ?? 'Unknown';
@@ -590,7 +557,7 @@ class _ActionButton extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              context.read<DiagnoseResultCubit>().postDiagnoseImage();
+              Navigator.of(context).pop("diagnosa");
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AssetColors.primaryMain,
@@ -618,7 +585,7 @@ class _ActionButton extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              // Handle konsultasi
+              Navigator.of(context).pop("konsultasi");
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AssetColors.primary30,

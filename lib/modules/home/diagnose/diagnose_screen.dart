@@ -4,6 +4,7 @@ import 'package:chickfit/app_cubit.dart';
 import 'package:chickfit/core/ext/number_extension.dart';
 import 'package:chickfit/core/resources/asset_colors.dart';
 import 'package:chickfit/core/route/page_route.dart';
+import 'package:chickfit/core/utils/logging_util.dart';
 import 'package:chickfit/core/utils/size_config.dart';
 import 'package:chickfit/core/utils/size_util.dart';
 import 'package:chickfit/core/utils/toast_util.dart';
@@ -13,6 +14,7 @@ import 'package:chickfit/core/widgets/gap.dart';
 import 'package:chickfit/core/widgets/ink_pressable_base.dart';
 import 'package:chickfit/core/widgets/loading_ring.dart';
 import 'package:chickfit/modules/home/bloc/home_cubit.dart';
+import 'package:chickfit/modules/home/chat/bloc/chat_cubit.dart';
 import 'package:chickfit/modules/home/diagnose/bloc/diagnose_form_cubit.dart';
 import 'package:chickfit/modules/home/diagnose/bloc/diagnose_histories_cubit.dart';
 import 'package:chickfit/modules/home/diagnose/widgets/image_picker_bottom_sheet.dart';
@@ -117,63 +119,88 @@ class _Header extends StatelessWidget {
   }
 }
 
-class DiagnoseTabBarView extends StatelessWidget {
+class DiagnoseTabBarView extends StatefulWidget {
   const DiagnoseTabBarView({super.key});
 
   @override
+  State<DiagnoseTabBarView> createState() => _DiagnoseTabBarViewState();
+}
+
+class _DiagnoseTabBarViewState extends State<DiagnoseTabBarView>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(length: 2, vsync: this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TabBar(
-              indicatorColor: AssetColors.primaryMain,
-              labelColor: AssetColors.primaryMain,
-              unselectedLabelColor: AssetColors.textSecondary,
-              tabs: [
-                Tab(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.photo_camera_outlined),
-                      SizedBox(width: 8),
-                      Text('Diagnosis'),
-                    ],
-                  ),
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: TabBar(
+            controller: _tabController,
+            indicatorColor: AssetColors.primaryMain,
+            labelColor: AssetColors.primaryMain,
+            unselectedLabelColor: AssetColors.textSecondary,
+            tabs: [
+              Tab(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.photo_camera_outlined),
+                    SizedBox(width: 8),
+                    Text('Diagnosis'),
+                  ],
                 ),
-                Tab(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.history),
-                      SizedBox(width: 8),
-                      Text('Riwayat'),
-                    ],
-                  ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.history),
+                    SizedBox(width: 8),
+                    Text('Riwayat'),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: TabBarView(
-              children: [
-                DiagnoseFormWidget(),
-                DiagnoseHistoriesSection(),
-              ],
-            ),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              DiagnoseFormWidget(
+                tabController: _tabController,
+              ),
+              DiagnoseHistoriesSection(
+                tabController: _tabController,
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 class DiagnoseFormWidget extends StatelessWidget {
+  final TabController tabController;
   const DiagnoseFormWidget({
     super.key,
+    required this.tabController,
   });
 
   @override
@@ -183,7 +210,7 @@ class DiagnoseFormWidget extends StatelessWidget {
         if (state.status == DiagnoseFormStatus.success &&
             state.diagnosisResult != null) {
           // Navigate to result page with the diagnosis data
-          await Navigator.of(context).pushNamed(
+          final result = await Navigator.of(context).pushNamed(
             MyRouteName.diagnoseResultPage,
             arguments: {
               'diagnosisData': state.diagnosisResult,
@@ -197,6 +224,12 @@ class DiagnoseFormWidget extends StatelessWidget {
             context
                 .read<DiagnoseHistoriesCubit>()
                 .fetchDiagnoseHistories(userId: userId.toString());
+          }
+          LogUtil.info("TESS aja dulu disini $result ");
+          if (result != null && result == "konsultasi") {
+            context.read<HomeCubit>().setActiveHomePageIndex(3);
+            context.read<ChatCubit>().toggleShowBottomSheetDoctor(true);
+            LogUtil.info("TESS aja dulu disini 1 ");
           }
         } else if (state.status == DiagnoseFormStatus.error &&
             state.errorMessage != null) {

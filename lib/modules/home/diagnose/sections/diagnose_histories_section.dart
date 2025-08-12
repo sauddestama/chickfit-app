@@ -3,16 +3,20 @@ import 'package:chickfit/core/enum/enum_data_status.dart';
 import 'package:chickfit/core/resources/asset_colors.dart';
 import 'package:chickfit/core/resources/theme/theme_padding.dart';
 import 'package:chickfit/core/route/page_route.dart';
+import 'package:chickfit/core/utils/logging_util.dart';
 import 'package:chickfit/core/widgets/ink_pressable_base.dart';
 import 'package:chickfit/core/widgets/shimmer_box.dart';
 import 'package:chickfit/core/widgets/widgets.dart';
 import 'package:chickfit/data/source/network/responses/get_diagnose_histories_response.dart';
+import 'package:chickfit/modules/home/bloc/home_cubit.dart';
+import 'package:chickfit/modules/home/chat/bloc/chat_cubit.dart';
 import 'package:chickfit/modules/home/diagnose/bloc/diagnose_histories_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DiagnoseHistoriesSection extends StatelessWidget {
-  const DiagnoseHistoriesSection({super.key});
+  final TabController tabController;
+  const DiagnoseHistoriesSection({super.key, required this.tabController});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +56,26 @@ class DiagnoseHistoriesSection extends StatelessWidget {
             itemCount: state.diagnoseHistories?.length ?? 0,
             itemBuilder: (context, idx) {
               final diagnoseHistory = state.diagnoseHistories![idx];
-              return _DiagnoseHistoryCard(diagnoseHistory: diagnoseHistory);
+              return _DiagnoseHistoryCard(
+                diagnoseHistory: diagnoseHistory,
+                onTap: () async {
+                  final result = await Navigator.of(context).pushNamed(
+                    MyRouteName.diagnoseResultPage,
+                    arguments: {
+                      'id': diagnoseHistory.id!,
+                    },
+                  );
+                  LogUtil.info("TESS aja dulu disini $result ");
+                  if (result != null && result == "konsultasi") {
+                    context.read<HomeCubit>().setActiveHomePageIndex(3);
+                    context.read<ChatCubit>().toggleShowBottomSheetDoctor(true);
+                    LogUtil.info("TESS aja dulu disini 1 ");
+                  } else if (result != null && result == "diagnosa") {
+                    LogUtil.info("TESS aja dulu disini 2 ");
+                    tabController.animateTo(0);
+                  }
+                },
+              );
             },
             separatorBuilder: (BuildContext context, int index) {
               return SizedBox(
@@ -68,9 +91,11 @@ class DiagnoseHistoriesSection extends StatelessWidget {
 
 class _DiagnoseHistoryCard extends StatelessWidget {
   final DiagnoseHistoryItem diagnoseHistory;
+  final VoidCallback onTap;
 
   const _DiagnoseHistoryCard({
     required this.diagnoseHistory,
+    required this.onTap,
   });
 
   @override
@@ -80,14 +105,7 @@ class _DiagnoseHistoryCard extends StatelessWidget {
       child: InkPressableBase(
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
-        onTap: () {
-          Navigator.of(context).pushNamed(
-            MyRouteName.diagnoseResultPage,
-            arguments: {
-              'id': diagnoseHistory.id!,
-            },
-          );
-        },
+        onTap: onTap,
         child: Ink(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -127,7 +145,7 @@ class _DiagnoseHistoryCard extends StatelessWidget {
                 children: [
                   const Text("Hasil: "),
                   Text(
-                    "${diagnoseHistory.confidence?.toStringAsFixed(0) ?? '0'}% ${diagnoseHistory.label ?? 'Unknown Disease'}",
+                    "${(diagnoseHistory.confidence! * 100).toStringAsFixed(1)}% ${diagnoseHistory.label ?? 'Unknown Disease'}",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.teal,
