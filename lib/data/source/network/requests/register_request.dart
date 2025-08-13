@@ -14,7 +14,6 @@ class RegisterRequest {
       'name': name,
       'email': email,
       'password': password,
-      'role': "farmer",
     };
   }
 
